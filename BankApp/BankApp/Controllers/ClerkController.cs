@@ -23,19 +23,22 @@ namespace BankApp.Controllers
         [HttpGet("{bankId}/{clerkId}")]
         public ActionResult<Clerk> Get(string bankId,string clerkId)
         {
-            var clerk = clerkService.GetClerk(bankId, clerkId);
-            if(clerk == null)
-                return NotFound();
-            return Ok(clerk);
+            var result = clerkService.CheckClerk(bankId, clerkId);
+            if (result != null)
+                return NotFound(result);
+            return Ok(clerkService.GetClerk(bankId, clerkId));
         }
 
         // POST api/<ClerkController>
         [HttpPost("{bankId}")]
         public IActionResult Post(string bankId,Clerk clerk)
         {
-            if (clerkService.GetBank(bankId) == null)
-                return NotFound("Bank not found with that id");
-            clerkService.AddClerk(bankId,clerk);
+            var result = clerkService.Check(bankId);
+            if (result != null)
+                return NotFound(result);
+            else if (bankId != clerk.BankId)
+                return BadRequest("Bad request! recheck the bank-id");
+            clerkService.AddClerk(bankId, clerk);
             return CreatedAtAction(nameof(Post), new { clerkId = clerk.ClerkId }, clerk);
         }
 
@@ -43,9 +46,12 @@ namespace BankApp.Controllers
         [HttpPut("{bankId}/{clerkId}")]
         public IActionResult Put(string bankId,string clerkId, Clerk clerk)
         {
-            if (clerkService.GetClerk(bankId, clerkId) == null || clerkId != clerk.ClerkId)
-                return NotFound("Not Found! Recheck your bank-id and clerk-id");
-            clerkService.UpdateClerk(clerkId,clerk);
+            var result = clerkService.CheckClerk(bankId,clerkId);
+            if (result != null)
+                return NotFound(result);
+            else if (bankId != clerk.BankId || clerkId != clerk.ClerkId)
+                return BadRequest("Bad request! recheck the bank-id & clerk-id");
+            clerkService.UpdateClerk(bankId,clerkId,clerk);
             return Ok("Success!");
         }
 
@@ -53,8 +59,9 @@ namespace BankApp.Controllers
         [HttpDelete("{bankId}/{clerkId}")]
         public IActionResult Delete(string bankId,string clerkId)
         {
-            if (clerkService.GetClerk(bankId, clerkId) == null)
-                return NotFound("Not Found! Recheck your bank-id and clerk-id");
+            var result = clerkService.CheckClerk(bankId, clerkId);
+            if (result != null)
+                return NotFound(result);
             clerkService.DeleteClerk(bankId,clerkId);
             return Ok("Success!");
         }

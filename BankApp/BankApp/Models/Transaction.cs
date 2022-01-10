@@ -12,5 +12,7 @@
         public DateTime TimeOfTransaction { get; set; }
         public Enums.CurrencyType Currency { get; set; }
         public bool IsActive { get; set; }
+        public Account Account { get; set; }
+        
     }
 }

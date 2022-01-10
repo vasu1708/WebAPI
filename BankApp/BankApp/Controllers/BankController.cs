@@ -25,9 +25,8 @@ namespace BankApp.Controllers
         {
             var bank = clerkService.GetBank(bankId);
             if (bank == null)
-                return NotFound();
-            else
-                return Ok(bank);
+                return NotFound("Not Found a bank with id!");
+            return Ok(bank);
         }
 
         // POST api/<BankController>
@@ -42,8 +41,11 @@ namespace BankApp.Controllers
         [HttpPut("{bankId}")]
         public IActionResult Put(string bankId,Bank bank)
         {
-            if (clerkService.GetBank(bankId) == null || bankId != bank.BankId)
-                return NotFound("Not Found! Recheck your bank-id");
+            var result = clerkService.Check(bankId);
+            if (result != null)
+                return NotFound(result);
+            else if (bankId != bank.BankId)
+                return BadRequest("Bad request! recheck your bank-id");
             clerkService.UpdateBank(bankId,bank);
             return Ok("Success");
         }
@@ -51,8 +53,9 @@ namespace BankApp.Controllers
         [HttpDelete("{bankId}")]
         public IActionResult Delete(string bankId)
         {
-            if (clerkService.GetBank(bankId) == null)
-                return NotFound("Bank with that Id is not found");
+            var result = clerkService.Check(bankId);
+            if (result != null)
+                return NotFound(result);
             clerkService.DeleteBank(bankId);
             return Ok("success!");
         }
