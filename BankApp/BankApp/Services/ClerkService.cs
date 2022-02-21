@@ -4,8 +4,8 @@ namespace BankApp.Services
 {
     public  class ClerkService
     {
-        public DbContextService context { get; set; }
-        public ClerkService() => context = new DbContextService();
+        public BDbContext context { get; set; }
+        public ClerkService() => context = new DbContextService(new SqlServerDbContext()).GetDbContext();
 
         public string Check(string bankId)
         {

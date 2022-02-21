@@ -11,6 +11,6 @@
         public string Address { get; set; }
         public string MobileNumber { get; set; }
         public bool IsActive { get; set; }
-        public Bank Bank { get; set; }
+        //public Bank Bank { get; set; }
     }
 }

@@ -15,7 +15,7 @@
         public Enums.CurrencyType Currency { get; set; }
         public DateTime AccountCreationDate { get; set; }
         public bool IsActive { get; set; }
-        public Bank Bank { get; set; }
-        public List<Transaction> Transactions { get; set; }
+        /*public Bank Bank { get; set; }
+        public List<Transaction> Transactions { get; set; }*/
     }
 }
